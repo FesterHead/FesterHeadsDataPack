@@ -35,7 +35,7 @@
       "base_height": 8,
       "height_rand_a": 1,
       "height_rand_b": 2,
-      "type": "minecraft:forking_trunk_placer"
+      "type": "minecraft:fancy_trunk_placer"
     },
     "trunk_provider": {
       "state": {

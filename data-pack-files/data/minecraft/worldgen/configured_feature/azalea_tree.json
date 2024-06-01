@@ -61,7 +61,7 @@
       "height_rand_a": 2,
       "height_rand_b": 3,
       "min_height_for_leaves": 3,
-      "type": "minecraft:bending_trunk_placer"
+      "type": "minecraft:fancy_trunk_placer"
     },
     "trunk_provider": {
       "state": {

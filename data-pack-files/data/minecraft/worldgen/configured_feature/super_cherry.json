@@ -37,7 +37,7 @@
       "upper_size": 2
     },
     "trunk_placer": {
-      "base_height": 10,
+      "base_height": 16,
       "branch_count": {
         "distribution": [
           {
