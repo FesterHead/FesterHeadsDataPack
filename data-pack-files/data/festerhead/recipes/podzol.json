@@ -1,0 +1,23 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "ggg",
+        "nnn",
+        "ccc"
+    ],
+    "key": {
+        "g": {
+            "item": "minecraft:grass_block"
+        },
+        "n": {
+            "item": "minecraft:netherrack"
+        },
+        "c": {
+            "item": "minecraft:coarse_dirt"
+        }
+    },
+    "result": {
+        "item": "minecraft:podzol",
+        "count": 8
+    }
+}

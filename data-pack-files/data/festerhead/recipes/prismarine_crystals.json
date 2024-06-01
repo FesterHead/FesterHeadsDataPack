@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+      "lgl",
+      "gdg",
+      "lgl"
+  ],
+  "key": {
+      "l": {
+          "item": "minecraft:lapis_lazuli"
+      },
+      "g": {
+          "item": "minecraft:glowstone"
+      },
+      "d": {
+          "item": "minecraft:diamond"
+      }
+  },
+  "result": {
+      "item": "minecraft:prismarine_crystals"
+  }
+}

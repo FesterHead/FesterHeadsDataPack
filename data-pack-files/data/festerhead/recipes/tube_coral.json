@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " s ",
+    "sds",
+    " c "
+  ],
+  "key": {
+    "s": {
+      "item": "minecraft:wheat_seeds"
+    },
+    "d": {
+      "item": "minecraft:blue_dye"
+    },
+    "c": {
+      "item": "minecraft:dead_tube_coral_block"
+    }
+  },
+  "result": {
+    "item": "minecraft:tube_coral"
+  }
+}

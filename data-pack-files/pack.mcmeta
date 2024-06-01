@@ -1,6 +1,10 @@
 {
     "pack": {
         "description": "FesterHead's data pack.",
-        "pack_format": 15
+        "pack_format": 15,
+        "supported_formats": [
+            15,
+            999
+        ]
     }
 }
