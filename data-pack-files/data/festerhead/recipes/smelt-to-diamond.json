@@ -29,6 +29,9 @@
             "item": "minecraft:diamond_pickaxe"
         },
         {
+            "item": "minecraft:diamond_shovel"
+        },
+        {
             "item": "minecraft:diamond_sword"
         }
     ],
