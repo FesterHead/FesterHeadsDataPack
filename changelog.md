@@ -7,6 +7,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ## [1.0.8] 2024.09.15
 - Restored villages.
 - Fixed brain coral recipe.
+- Renames some files.
+- Added a dirt to cobblestone conversion.
 
 ## [1.0.7] 2024.09.14
 - Made villages and mineshafts very rare.
