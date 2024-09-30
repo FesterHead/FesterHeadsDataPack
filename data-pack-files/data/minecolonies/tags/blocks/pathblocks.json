@@ -3,6 +3,11 @@
     "values": [
         "minecraft:stone_bricks",
         "minecraft:mossy_stone_bricks",
-        "minecraft:cracked_stone_bricks"
+        "minecraft:cracked_stone_bricks",
+        "minecraft:andesite",
+        "minecraft:granite",
+        "minecraft:diorite",
+        "minecraft:blackstone",
+        "minecraft:deepslate"
     ]
 }
