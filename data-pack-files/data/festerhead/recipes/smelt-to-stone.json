@@ -1,24 +1,24 @@
 {
-    "type": "minecraft:smelting",
-    "category": "misc",
-    "cookingtime": 100,
-    "experience": 1.0,
-    "ingredient": [
-        {
-            "item": "minecraft:stone_axe"
-        },
-        {
-            "item": "minecraft:stone_hoe"
-        },
-        {
-            "item": "minecraft:stone_pickaxe"
-        },
-        {
-            "item": "minecraft:stone_shovel"
-        },
-        {
-            "item": "minecraft:stone_sword"
-        }
-    ],
-    "result": "minecraft:stone"
+  "type": "minecraft:smelting",
+  "category": "misc",
+  "cookingtime": 100,
+  "experience": 1.0,
+  "ingredient": [
+    {
+      "item": "minecraft:stone_axe"
+    },
+    {
+      "item": "minecraft:stone_hoe"
+    },
+    {
+      "item": "minecraft:stone_pickaxe"
+    },
+    {
+      "item": "minecraft:stone_shovel"
+    },
+    {
+      "item": "minecraft:stone_sword"
+    }
+  ],
+  "result": "minecraft:stone"
 }

@@ -29,9 +29,7 @@
             }
           }
         },
-        "directions": [
-          "down"
-        ],
+        "directions": ["down"],
         "exclusion_radius_xz": 1,
         "exclusion_radius_y": 0,
         "probability": 0.14,
@@ -89,10 +87,7 @@
         "can_grow_through": "#minecraft:mangrove_roots_can_grow_through",
         "max_root_length": 25,
         "max_root_width": 8,
-        "muddy_roots_in": [
-          "minecraft:mud",
-          "minecraft:muddy_mangrove_roots"
-        ],
+        "muddy_roots_in": ["minecraft:mud", "minecraft:muddy_mangrove_roots"],
         "muddy_roots_provider": {
           "state": {
             "Name": "minecraft:muddy_mangrove_roots",

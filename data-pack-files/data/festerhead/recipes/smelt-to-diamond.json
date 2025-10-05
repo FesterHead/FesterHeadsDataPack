@@ -1,39 +1,39 @@
 {
-    "type": "minecraft:smelting",
-    "category": "misc",
-    "cookingtime": 400,
-    "experience": 1.0,
-    "ingredient": [
-        {
-            "item": "minecraft:diamond_axe"
-        },
-        {
-            "item": "minecraft:diamond_boots"
-        },
-        {
-            "item": "minecraft:diamond_chestplate"
-        },
-        {
-            "item": "minecraft:diamond_helmet"
-        },
-        {
-            "item": "minecraft:diamond_hoe"
-        },
-        {
-            "item": "minecraft:diamond_horse_armor"
-        },
-        {
-            "item": "minecraft:diamond_leggings"
-        },
-        {
-            "item": "minecraft:diamond_pickaxe"
-        },
-        {
-            "item": "minecraft:diamond_shovel"
-        },
-        {
-            "item": "minecraft:diamond_sword"
-        }
-    ],
-    "result": "minecraft:diamond"
+  "type": "minecraft:smelting",
+  "category": "misc",
+  "cookingtime": 400,
+  "experience": 1.0,
+  "ingredient": [
+    {
+      "item": "minecraft:diamond_axe"
+    },
+    {
+      "item": "minecraft:diamond_boots"
+    },
+    {
+      "item": "minecraft:diamond_chestplate"
+    },
+    {
+      "item": "minecraft:diamond_helmet"
+    },
+    {
+      "item": "minecraft:diamond_hoe"
+    },
+    {
+      "item": "minecraft:diamond_horse_armor"
+    },
+    {
+      "item": "minecraft:diamond_leggings"
+    },
+    {
+      "item": "minecraft:diamond_pickaxe"
+    },
+    {
+      "item": "minecraft:diamond_shovel"
+    },
+    {
+      "item": "minecraft:diamond_sword"
+    }
+  ],
+  "result": "minecraft:diamond"
 }

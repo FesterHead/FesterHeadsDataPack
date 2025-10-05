@@ -1,27 +1,27 @@
 {
-    "feature": "minecraft:ore_iron",
-    "placement": [
-      {
-        "count": 2,
-        "type": "minecraft:count"
-      },
-      {
-        "type": "minecraft:in_square"
-      },
-      {
-        "height": {
-          "min_inclusive": {
-            "absolute": 80
-          },
-          "max_inclusive": {
-            "absolute": 384
-          },
-          "type": "minecraft:trapezoid"
+  "feature": "minecraft:ore_iron",
+  "placement": [
+    {
+      "count": 2,
+      "type": "minecraft:count"
+    },
+    {
+      "type": "minecraft:in_square"
+    },
+    {
+      "height": {
+        "min_inclusive": {
+          "absolute": 80
         },
-        "type": "minecraft:height_range"
+        "max_inclusive": {
+          "absolute": 384
+        },
+        "type": "minecraft:trapezoid"
       },
-      {
-        "type": "minecraft:biome"
-      }
-    ]
-  }
+      "type": "minecraft:height_range"
+    },
+    {
+      "type": "minecraft:biome"
+    }
+  ]
+}

@@ -1,102 +1,102 @@
 {
-    "type": "minecraft:smelting",
-    "category": "misc",
-    "cookingtime": 300,
-    "experience": 1.0,
-    "ingredient": [
-        {
-            "item": "minecraft:activator_rail"
-        },
-        {
-            "item": "minecraft:blast_furnace"
-        },
-        {
-            "item": "minecraft:bucket"
-        },
-        {
-            "item": "minecraft:cauldron"
-        },
-        {
-            "item": "minecraft:chain"
-        },
-        {
-            "item": "minecraft:chainmail_boots"
-        },
-        {
-            "item": "minecraft:chainmail_chestplate"
-        },
-        {
-            "item": "minecraft:chainmail_helmet"
-        },
-        {
-            "item": "minecraft:chainmail_leggings"
-        },
-        {
-            "item": "minecraft:clock"
-        },
-        {
-            "item": "minecraft:compass"
-        },
-        {
-            "item": "minecraft:detector_rail"
-        },
-        {
-            "item": "minecraft:heavy_weighted_pressure_plate"
-        },
-        {
-            "item": "minecraft:hopper"
-        },
-        {
-            "item": "minecraft:iron_axe"
-        },
-        {
-            "item": "minecraft:iron_bars"
-        },
-        {
-            "item": "minecraft:iron_boots"
-        },
-        {
-            "item": "minecraft:iron_chestplate"
-        },
-        {
-            "item": "minecraft:iron_door"
-        },
-        {
-            "item": "minecraft:iron_helmet"
-        },
-        {
-            "item": "minecraft:iron_hoe"
-        },
-        {
-            "item": "minecraft:iron_horse_armor"
-        },
-        {
-            "item": "minecraft:iron_leggings"
-        },
-        {
-            "item": "minecraft:iron_pickaxe"
-        },
-        {
-            "item": "minecraft:iron_shovel"
-        },
-        {
-            "item": "minecraft:iron_sword"
-        },
-        {
-            "item": "minecraft:iron_trapdoor"
-        },
-        {
-            "item": "minecraft:light_weighted_pressure_plate"
-        },
-        {
-            "item": "minecraft:powered_rail"
-        },
-        {
-            "item": "minecraft:rail"
-        },
-        {
-            "item": "minecraft:shears"
-        }
-    ],
-    "result": "minecraft:iron_ingot"
+  "type": "minecraft:smelting",
+  "category": "misc",
+  "cookingtime": 300,
+  "experience": 1.0,
+  "ingredient": [
+    {
+      "item": "minecraft:activator_rail"
+    },
+    {
+      "item": "minecraft:blast_furnace"
+    },
+    {
+      "item": "minecraft:bucket"
+    },
+    {
+      "item": "minecraft:cauldron"
+    },
+    {
+      "item": "minecraft:chain"
+    },
+    {
+      "item": "minecraft:chainmail_boots"
+    },
+    {
+      "item": "minecraft:chainmail_chestplate"
+    },
+    {
+      "item": "minecraft:chainmail_helmet"
+    },
+    {
+      "item": "minecraft:chainmail_leggings"
+    },
+    {
+      "item": "minecraft:clock"
+    },
+    {
+      "item": "minecraft:compass"
+    },
+    {
+      "item": "minecraft:detector_rail"
+    },
+    {
+      "item": "minecraft:heavy_weighted_pressure_plate"
+    },
+    {
+      "item": "minecraft:hopper"
+    },
+    {
+      "item": "minecraft:iron_axe"
+    },
+    {
+      "item": "minecraft:iron_bars"
+    },
+    {
+      "item": "minecraft:iron_boots"
+    },
+    {
+      "item": "minecraft:iron_chestplate"
+    },
+    {
+      "item": "minecraft:iron_door"
+    },
+    {
+      "item": "minecraft:iron_helmet"
+    },
+    {
+      "item": "minecraft:iron_hoe"
+    },
+    {
+      "item": "minecraft:iron_horse_armor"
+    },
+    {
+      "item": "minecraft:iron_leggings"
+    },
+    {
+      "item": "minecraft:iron_pickaxe"
+    },
+    {
+      "item": "minecraft:iron_shovel"
+    },
+    {
+      "item": "minecraft:iron_sword"
+    },
+    {
+      "item": "minecraft:iron_trapdoor"
+    },
+    {
+      "item": "minecraft:light_weighted_pressure_plate"
+    },
+    {
+      "item": "minecraft:powered_rail"
+    },
+    {
+      "item": "minecraft:rail"
+    },
+    {
+      "item": "minecraft:shears"
+    }
+  ],
+  "result": "minecraft:iron_ingot"
 }

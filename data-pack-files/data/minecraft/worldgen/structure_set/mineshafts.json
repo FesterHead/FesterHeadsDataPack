@@ -1,18 +1,18 @@
 {
-    "structures": [
-        {
-            "structure": "minecraft:mineshaft",
-            "weight": 1
-        },
-        {
-            "structure": "minecraft:mineshaft_mesa",
-            "weight": 1
-        }
-    ],
-    "placement": {
-        "salt": 4507996320,
-        "spacing": 1024,
-        "separation": 512,
-        "type": "minecraft:random_spread"
+  "structures": [
+    {
+      "structure": "minecraft:mineshaft",
+      "weight": 1
+    },
+    {
+      "structure": "minecraft:mineshaft_mesa",
+      "weight": 1
     }
+  ],
+  "placement": {
+    "salt": 4507996320,
+    "spacing": 1024,
+    "separation": 512,
+    "type": "minecraft:random_spread"
+  }
 }

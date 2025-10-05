@@ -1,12 +1,12 @@
 {
-    "type": "minecraft:smelting",
-    "category": "misc",
-    "cookingtime": 100,
-    "experience": 6.3,
-    "ingredient": [
-        {
-            "item": "minecraft:raw_copper_block"
-        }
-    ],
-    "result": "minecraft:copper_block"
+  "type": "minecraft:smelting",
+  "category": "misc",
+  "cookingtime": 100,
+  "experience": 6.3,
+  "ingredient": [
+    {
+      "item": "minecraft:raw_copper_block"
+    }
+  ],
+  "result": "minecraft:copper_block"
 }
