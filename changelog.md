@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [1.0.16]
 
+- Removed spyglass.json, VS Code Copilot and Google Gemini are better helpers.
+- Added Minecolonies recruitment items - I like flowers.
+- Added Minecolonies diseases - Hate them.
+
+## [1.0.16]
+
 - Removed coral, never used the recipes.
 - Applied consistent formatting to files.
 - spyglass.json is for using the SPGoding.datapack-language-server VS Code extension.
