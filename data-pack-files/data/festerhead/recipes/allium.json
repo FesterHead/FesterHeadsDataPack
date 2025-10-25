@@ -1,10 +1,7 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": ["ddd", "ddd", "sss"],
+  "pattern": ["ddd", "ddd", "ddd"],
   "key": {
-    "s": {
-      "item": "minecraft:wheat_seeds"
-    },
     "d": {
       "item": "minecraft:dirt"
     }

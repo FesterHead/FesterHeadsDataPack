@@ -1,0 +1,16 @@
+[
+  {
+    "name": "covid-19",
+    "rarity": 100,
+    "items": [
+      {
+        "item": "minecraft:carrot",
+        "count": 1
+      },
+      {
+        "item": "minecraft:potato",
+        "count": 1
+      }
+    ]
+  }
+]
