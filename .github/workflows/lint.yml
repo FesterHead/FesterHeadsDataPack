@@ -1,0 +1,28 @@
+name: Lint
+
+on:
+  push:
+    branches: [ main, '2.0.0' ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  super-linter:
+    name: Super-Linter
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run Super-Linter
+        uses: github/super-linter@v5
+        env:
+          DEFAULT_BRANCH: main
+          VALIDATE_ALL_CODEBASE: false
+          VALIDATE_JSON: true
+          VALIDATE_YAML: true
+          VALIDATE_MARKDOWN: true
+          VALIDATE_SHELL: true
+          # Turn off Ruby/language checks we don't use to reduce noise
+          VALIDATE_RUBY: false
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
