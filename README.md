@@ -172,7 +172,7 @@ Including additional files at the root is intentional and will not break Minecra
 
 ## Will you update to a different Minecraft version?
 
-Maybe if Mincolonies and the other mods I use go to a higher version.
+Maybe if Minecolonies and the other mods I use go to a higher version.
 
 ## Credits
 
