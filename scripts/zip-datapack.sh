@@ -211,8 +211,7 @@ if [ ! -f "$zippath" ]; then
   die "Failed to create $zippath"
 fi
 
-sizekib=$(awk "BEGIN {printf \"%.2f\", $(stat -c%s "$zippath")/1024}")
-info "Created $zippath (${sizekib} KB)"
+info "Created $zippath successfully."
 
 # cleanup done by trap
 info "Pau. Have a great day! 🏄 🌈 🌴 🌺 🦄"
