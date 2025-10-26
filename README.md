@@ -72,26 +72,23 @@ Install and use locally (recommended):
 
 ```powershell
 # Install pre-commit (Python is required)
-pip install --user pre-commit
+python -m pip install --user pre-commit
 
 # Install git hook scripts for this repository (run once)
-pre-commit install
+python -m pre_commit install
 
 # Run all configured hooks against all files (useful to see current findings)
-pre-commit run --all-files
+python -m pre_commit run --all-files
 ```
 
 If you prefer, you can run a single hook, for example:
 
 ```powershell
 # Run prettier (JSON/MD) only
-pre-commit run prettier --all-files
-
-# Run shellcheck only
-pre-commit run shellcheck --all-files
+python -m pre_commit run prettier --all-files
 ```
 
-If `pre-commit run --all-files` reports issues, fix them locally and re-run. We can tune or disable noisy hooks if needed.
+If `python -m pre_commit run --all-files` reports issues, fix them locally and re-run. We can tune or disable noisy hooks if needed.
 
 ## Release workflow
 

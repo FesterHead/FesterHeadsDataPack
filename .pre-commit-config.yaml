@@ -13,6 +13,3 @@ repos:
     hooks:
       - id: prettier
         files: \.(json|md)$
-
-  # shellcheck hook removed: the mirrors-shellcheck repo currently fails to fetch in some environments.
-  # If you want shellcheck linting, install shellcheck locally and run it, or re-add a maintained hook later.
