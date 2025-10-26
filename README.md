@@ -146,7 +146,7 @@ Notes:
 
 ## Contents of the ZIP
 
-The generated ZIP contains the datapack at the root and includes documentation files so end users can read them without opening the repo. Example structure:
+The generated ZIP contains the datapack at the root and includes documentation files so end users can read them without opening the repository. Example structure:
 
 - pack.mcmeta
 - pack.png
@@ -159,9 +159,9 @@ The generated ZIP contains the datapack at the root and includes documentation f
     - ...
   - minecraft
     - ...
-- changelog.md
-- LICENSE
-- README.md
+  - changelog.md
+  - LICENSE
+  - README.md
 
 Including additional files at the root is intentional and will not break Minecraft's datapack format — Minecraft ignores extra files at the root as long as `pack.mcmeta` and the `data/` folder are present.
 
@@ -180,7 +180,9 @@ Maybe if Minecolonies and the other mods I use go to a higher version.
 
 [Rush - The Trees](https://www.youtube.com/watch?v=JnC88xBPkkc)
 
-Tree generation heavily inspired by [Bigger Trees](https://www.curseforge.com/minecraft/mc-mods/bigger-trees) mod. Worldgen files pulled from jar, adjusted some for size, and included within my data pack. I especially like the taller oak trees from the plains seed [5467369947628262074](https://www.chunkbase.com/apps/seed-map#seed=5467369947628262074&platform=java_1_20&dimension=overworld&x=0&z=0&zoom=0.5) I've been using since 1.19.2 with the Minecolonies mod.
+Tree generation heavily inspired by [Bigger Trees](https://www.curseforge.com/minecraft/mc-mods/bigger-trees) mod. Worldgen files pulled from jar, adjusted some for size, and included within my data pack.
+
+I especially like the taller oak trees from the plains seed 5467369947628262074. See Chunkbase's seed map for details: https://www.chunkbase.com/apps/seed-map. I've been using this seed since 1.19.2 with the Minecolonies mod.
 
 ### No abandoned Minecolony colonies
 
@@ -196,7 +198,7 @@ From [Larger Ore Veins: Deluxe](https://modrinth.com/datapack/larger-ore-veins-d
 
 ## Contributing
 
-- Fork the repo, create a branch, and open a pull request.
+- Fork the repository, create a branch, and open a pull request.
 - Update `changelog.md` (add a `## [X.Y.Z]` section) for any release entries.
 - Use `scripts/zip-datapack.sh` to build artifacts locally for testing.
 

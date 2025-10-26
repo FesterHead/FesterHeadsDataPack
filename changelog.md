@@ -6,7 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [2.0.0]
 
-- Added Github actions build draft and public releases based on tags.
+- Added GitHub actions build draft and public releases based on tags.
 - Removed redundant version from versioning.properties, will get from tags or user input.
 - Modified zip-datapack.bat to use the tagged version or from input.
 - Restored allium recipe to use both dirt and seeds.
