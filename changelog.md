@@ -11,6 +11,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Modified zip-datapack.bat to use the tagged version or from input.
 - Restored allium recipe to use both dirt and seeds.
 - Added the no-tall-grass and no-short-grass world gen from my other datapack.
+- Added lint checks.
 - Improved README.
 
 ## [1.0.17]
