@@ -148,8 +148,6 @@ Notes:
 
 The generated ZIP contains the datapack at the root and includes documentation files so end users can read them without opening the repository. Example structure:
 
-- pack.mcmeta
-- pack.png
 - data/
   - festerhead/
     - recipes/
@@ -159,9 +157,11 @@ The generated ZIP contains the datapack at the root and includes documentation f
     - ...
   - minecraft
     - ...
-  - changelog.md
-  - LICENSE
-  - README.md
+- changelog.md
+- LICENSE
+- pack.png
+- pack.mcmeta
+- README.md
 
 Including additional files at the root is intentional and will not break Minecraft's datapack format — Minecraft ignores extra files at the root as long as `pack.mcmeta` and the `data/` folder are present.
 
