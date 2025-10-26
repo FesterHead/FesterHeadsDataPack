@@ -70,16 +70,46 @@ Files added:
 
 Install and use locally (recommended):
 
-```powershell
+````powershell
 # Install pre-commit (Python is required)
 python -m pip install --user pre-commit
 
 # Install git hook scripts for this repository (run once)
 python -m pre_commit install
 
+# After `pre-commit install` the hooks are wired into Git and will run
+# automatically when you run `git commit` (they run against the files
+# that are staged for that commit). If a hook fails, the commit is
+# aborted and `pre-commit` prints which hook failed and why.
+#
+# What to do if a hook fails:
+# - Read the hook output to see the failing files and the suggested fixes.
+# - Many hooks can fix issues automatically. To let hooks attempt fixes
+#   and to see all current problems, run:
+#
+# ```powershell
+# python -m pre_commit run --all-files
+# ```
+#
+# - To run a single hook (for example prettier) across the repo:
+#
+# ```powershell
+# python -m pre_commit run prettier --all-files
+# ```
+#
+# - After fixing, stage the corrected files and run `git commit` again
+#   (hooks will re-run). If you absolutely must bypass the hooks for a
+#   single commit, you can use `git commit --no-verify` (not recommended).
+#
+# The command below also lets you run the hooks manually across the whole
+# repository (useful for onboarding or bulk fixes):
+
 # Run all configured hooks against all files (useful to see current findings)
 python -m pre_commit run --all-files
-```
+
+# To skip hooks for a single commit (not recommended) use:
+# git commit --no-verify -m "message"
+````
 
 If you prefer, you can run a single hook, for example:
 
