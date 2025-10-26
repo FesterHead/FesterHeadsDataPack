@@ -30,8 +30,8 @@ jobs:
             echo "minecraft-version not found in versioning.properties" >&2
             exit 1
           fi
-          echo "base=$base" >> $GITHUB_OUTPUT
-          echo "minecraft_version=$mc" >> $GITHUB_OUTPUT
+          echo "base=$base" >> "$GITHUB_OUTPUT"
+          echo "minecraft_version=$mc" >> "$GITHUB_OUTPUT"
 
       - name: Derive version from tag
         id: tag
@@ -58,7 +58,7 @@ jobs:
             echo "Failed to derive version from tag: $ref" >&2
             exit 1
           fi
-          echo "version=$version" >> $GITHUB_OUTPUT
+          echo "version=$version" >> "$GITHUB_OUTPUT"
 
       - name: Create zip of datapack
         id: zip
@@ -82,8 +82,8 @@ jobs:
           # Create the zip using the sanitized filename
           (cd "$staging" && zip -r "../releases/$filename" .)
           rm -rf "$staging"
-          echo "zip_path=releases/$filename" >> $GITHUB_OUTPUT
-          echo "zip_name=$filename" >> $GITHUB_OUTPUT
+          echo "zip_path=releases/$filename" >> "$GITHUB_OUTPUT"
+          echo "zip_name=$filename" >> "$GITHUB_OUTPUT"
 
       - name: Upload zip as artifact
         uses: actions/upload-artifact@v4
@@ -106,9 +106,9 @@ jobs:
             body="No changelog entry found for version $version"
           fi
           # expose multi-line body as output
-          echo "body<<EOF" >> $GITHUB_OUTPUT
-          printf '%s\n' "$body" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
+          echo "body<<EOF" >> "$GITHUB_OUTPUT"
+          printf '%s\n' "$body" >> "$GITHUB_OUTPUT"
+          echo "EOF" >> "$GITHUB_OUTPUT"
 
       - name: Create GitHub release
         id: create_release
