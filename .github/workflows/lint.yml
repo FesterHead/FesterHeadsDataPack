@@ -18,11 +18,7 @@ jobs:
         uses: github/super-linter@v5
         env:
           DEFAULT_BRANCH: main
+          # Use an explicit include list to avoid mixed include/exclude configuration errors
+          VALIDATE: "json,yaml,markdown,shell"
           VALIDATE_ALL_CODEBASE: false
-          VALIDATE_JSON: true
-          VALIDATE_YAML: true
-          VALIDATE_MARKDOWN: true
-          VALIDATE_SHELL: true
-          # Turn off Ruby/language checks we don't use to reduce noise
-          VALIDATE_RUBY: false
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
