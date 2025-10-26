@@ -198,7 +198,7 @@ From [Larger Ore Veins: Deluxe](https://modrinth.com/datapack/larger-ore-veins-d
 
 - Fork the repo, create a branch, and open a pull request.
 - Update `changelog.md` (add a `## [X.Y.Z]` section) for any release entries.
-- Use `zip-datapack.ps1` (preferred) or `zip-datapack.bat` to build artifacts locally for testing.
+- Use `scripts/zip-datapack.sh` to build artifacts locally for testing.
 
 ## License
 
