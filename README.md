@@ -182,7 +182,7 @@ Maybe if Minecolonies and the other mods I use go to a higher version.
 
 Tree generation heavily inspired by [Bigger Trees](https://www.curseforge.com/minecraft/mc-mods/bigger-trees) mod. Worldgen files pulled from jar, adjusted some for size, and included within my data pack.
 
-I especially like the taller oak trees from the plains seed 5467369947628262074. See Chunkbase's seed map for details: https://www.chunkbase.com/apps/seed-map. I've been using this seed since 1.19.2 with the Minecolonies mod.
+I especially like the taller oak trees from this plains seed [5467369947628262074](https://www.chunkbase.com/apps/seed-map#seed=5467369947628262074&platform=java_1_20&dimension=overworld&x=0&z=0&zoom=0.5).
 
 ### No abandoned Minecolony colonies
 

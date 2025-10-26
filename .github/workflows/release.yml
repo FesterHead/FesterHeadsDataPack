@@ -117,9 +117,11 @@ jobs:
             body="No changelog entry found for version $version"
           fi
           # expose multi-line body as output
-          echo "body<<EOF" >> "$GITHUB_OUTPUT"
-          printf '%s\n' "$body" >> "$GITHUB_OUTPUT"
-          echo "EOF" >> "$GITHUB_OUTPUT"
+          {
+            echo "body<<EOF"
+            printf '%s\n' "$body"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
 
       - name: Create GitHub release
         id: create_release
