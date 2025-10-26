@@ -91,8 +91,12 @@ jobs:
         run: |
           set -euo pipefail
           version="${{ steps.tag.outputs.version }}"
-          # Extract the changelog section for the matching version (between '## [version]' and the next '## [')
-          body=$(awk -v ver="$version" 'BEGIN{pat="^## \\[' ver "\\]"} $0 ~ pat {found=1; next} /^## \\[/{ if(found) exit } found{print}' changelog.md || true)
+          # Use sed to extract the section between '## [version]' and the next '## [' to avoid awk quoting issues
+          if [ -f changelog.md ]; then
+            body=$(sed -n "/^## \[$version\]/,/^## \[/{/^## \[$version\]/d; /^## \[/q; p}" changelog.md || true)
+          else
+            body=""
+          fi
           if [ -z "$body" ]; then
             body="No changelog entry found for version $version"
           fi
