@@ -13,6 +13,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Added the no-tall-grass and no-short-grass world gen from my other datapack.
 - Added lint checks.
 - Improved README.
+- Switched to using WSL and therefore shell scripts.
 
 ## [1.0.17]
 

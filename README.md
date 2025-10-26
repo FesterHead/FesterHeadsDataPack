@@ -38,17 +38,23 @@ A collection of world generation tweaks, recipe conversions, and Minecolonies he
 
 ## Build (developer)
 
-From the repository root (PowerShell on Windows):
+From the repository root (Linux/WSL or any POSIX shell):
 
-```powershell
-# Build with explicit version
-.\zip-datapack.bat 1.0.18
+```bash
+# Build with explicit version (creates releases/<base>-<version>.zip)
+./scripts/zip-datapack.sh 1.0.18
 
-# Build using the latest git tag (requires a tag to exist)
-.\zip-datapack.bat
+# Dry run (show what would be done without creating the zip)
+./scripts/zip-datapack.sh --dry-run
+
+# Interactive: the script will suggest a version from the latest git tag
+./scripts/zip-datapack.sh
 ```
 
-The artifact is written to `releases/<base>-<minecraft-version>-<version>.zip` (for example `releases/festerheads-datapack-1.20.1-1.0.18.zip`).
+Notes:
+
+- The script always writes the artifact to `releases/<base>-<version>.zip` and will overwrite an existing file of the same name.
+- The script requires `zip` to be installed on the system (`sudo apt install zip` on Debian/Ubuntu).
 
 ### Disable features / remove files
 
@@ -60,70 +66,82 @@ If you want to remove specific items or features from the datapack (for example 
 
 After editing, re-zip the datapack and install into `world/datapacks/`, then reload the world or restart the server.
 
+You can alo submit a pull request for the release.yaml to build additional artifacts based on the `data-pack-files/data` folders.
+
 ## Developer tooling — pre-commit hooks
 
-This repository includes a recommended `pre-commit` configuration to keep JSON, YAML, Markdown and shell files consistent and linted before commits.
+This repository uses `pre-commit` to validate JSON, YAML, Markdown and shell files before commits. You can run the hooks directly (recommended) or install the Git hook so checks run automatically on commit.
 
-Files added:
+Quick usage (run checks directly):
 
-- `.pre-commit-config.yaml` — config for pre-commit hooks (prettier for JSON/MD, json/yaml checks, shellcheck, etc.).
+```bash
+# Run all configured hooks across the repository
+pre-commit run --all-files
 
-Install and use locally (recommended):
+# Run a single hook (example: prettier)
+pre-commit run prettier --all-files
 
-````powershell
-# Install pre-commit (Python is required)
-python -m pip install --user pre-commit
-
-# Install git hook scripts for this repository (run once)
-python -m pre_commit install
-
-# After `pre-commit install` the hooks are wired into Git and will run
-# automatically when you run `git commit` (they run against the files
-# that are staged for that commit). If a hook fails, the commit is
-# aborted and `pre-commit` prints which hook failed and why.
-#
-# What to do if a hook fails:
-# - Read the hook output to see the failing files and the suggested fixes.
-# - Many hooks can fix issues automatically. To let hooks attempt fixes
-#   and to see all current problems, run:
-#
-# ```powershell
-# python -m pre_commit run --all-files
-# ```
-#
-# - To run a single hook (for example prettier) across the repo:
-#
-# ```powershell
-# python -m pre_commit run prettier --all-files
-# ```
-#
-# - After fixing, stage the corrected files and run `git commit` again
-#   (hooks will re-run). If you absolutely must bypass the hooks for a
-#   single commit, you can use `git commit --no-verify` (not recommended).
-#
-# The command below also lets you run the hooks manually across the whole
-# repository (useful for onboarding or bulk fixes):
-
-# Run all configured hooks against all files (useful to see current findings)
-python -m pre_commit run --all-files
-
-# To skip hooks for a single commit (not recommended) use:
-# git commit --no-verify -m "message"
-````
-
-If you prefer, you can run a single hook, for example:
-
-```powershell
-# Run prettier (JSON/MD) only
-python -m pre_commit run prettier --all-files
+# Run the shellcheck hook only
+pre-commit run shellcheck --all-files
 ```
 
-If `python -m pre_commit run --all-files` reports issues, fix them locally and re-run. We can tune or disable noisy hooks if needed.
+Installation options
+
+- Recommended (isolated): install `pre-commit` with `pipx` so the CLI is available without touching system Python:
+
+```bash
+sudo apt update
+sudo apt install -y pipx python3-venv   # Debian/Ubuntu
+python3 -m pipx ensurepath
+pipx install pre-commit
+exec $SHELL -l   # restart shell so pre-commit is on PATH
+```
+
+- Alternative (distro package):
+
+```bash
+sudo apt update
+sudo apt install -y pre-commit
+```
+
+After installing, you can (optionally) install the Git hook that runs on commit:
+
+```bash
+pre-commit install
+```
+
+Notes
+
+- The repository includes a local `shellcheck` hook that runs the system `shellcheck` binary — install it with `sudo apt install shellcheck` on Debian/Ubuntu.
+- If a pre-commit hook reports issues, run `pre-commit run --all-files` to see the full output and apply fixes, then stage and commit the corrections.
 
 ## Release workflow
 
-- Tag-based: pushing `vX.Y.Z` creates a published release and uploads the ZIP.
-- Test/draft flow: pushing `vdraft-X.Y.Z` creates a _draft_ release and also uploads the ZIP as a workflow artifact so testers can download it.
+You can create and push release or draft tags either with the included shell helper (recommended on Linux/WSL) or by creating Git tags manually.
+
+Recommended (interactive, uses `scripts/release.sh`):
+
+```bash
+# Interactive helper will suggest the latest tag and push the annotated tag to origin
+./scripts/release.sh
+```
+
+Manual (create & push a tag directly):
+
+```bash
+# Create a published release tag
+git tag -a v1.0.18 -m "Release v1.0.18"
+git push origin v1.0.18
+
+# Create a draft tag
+git tag -a vdraft-1.0.18 -m "Draft v1.0.18"
+git push origin vdraft-1.0.18
+```
+
+Notes:
+
+- Pushing `vX.Y.Z` creates a published release and uploads the ZIP via the GitHub Actions workflow.
+- Pushing `vdraft-X.Y.Z` creates a _draft_ release and uploads the ZIP as a workflow artifact for testers.
 - The release body is populated automatically from the `changelog.md` entry matching the numeric version `X.Y.Z`.
 
 ## Contents of the ZIP
@@ -152,9 +170,15 @@ Including additional files at the root is intentional and will not break Minecra
 - Tested with Minecraft Java Edition 1.20.1.
 - Optional: Minecolonies for Minecraft Java Edition 1.20.1.
 
+## Will you update to a different MInecraft version?
+
+Maybe if Mincolonies and the other mods I use go to a higher version.
+
 ## Credits
 
 ### The trees
+
+[Rush - The Trees](https://www.youtube.com/watch?v=JnC88xBPkkc)
 
 Tree generation heavily inspired by [Bigger Trees](https://www.curseforge.com/minecraft/mc-mods/bigger-trees) mod. Worldgen files pulled from jar, adjusted some for size, and included within my data pack. I especially like the taller oak trees from the plains seed [5467369947628262074](https://www.chunkbase.com/apps/seed-map#seed=5467369947628262074&platform=java_1_20&dimension=overworld&x=0&z=0&zoom=0.5) I've been using since 1.19.2 with the Minecolonies mod.
 
@@ -174,7 +198,7 @@ From [Larger Ore Veins: Deluxe](https://modrinth.com/datapack/larger-ore-veins-d
 
 - Fork the repo, create a branch, and open a pull request.
 - Update `changelog.md` (add a `## [X.Y.Z]` section) for any release entries.
-- Use `zip-datapack.bat` to build artifacts locally for testing.
+- Use `zip-datapack.ps1` (preferred) or `zip-datapack.bat` to build artifacts locally for testing.
 
 ## License
 

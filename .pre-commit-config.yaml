@@ -13,3 +13,12 @@ repos:
     hooks:
       - id: prettier
         files: \.(json|md)$
+
+  - repo: local
+    hooks:
+      - id: shellcheck
+        name: shellcheck (system)
+        entry: shellcheck
+        language: system
+        files: '(^|/).*\.sh$'
+        types: [file]

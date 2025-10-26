@@ -1,0 +1,183 @@
+#!/usr/bin/env bash
+# zip-datapack.sh
+# Create a single ZIP artifact for releases (bash equivalent of zip-datapack.ps1)
+
+set -euo pipefail
+IFS=$'\n\t'
+
+prog=$(basename "$0")
+info() {
+  echo "[INFO $(date '+%Y-%m-%d %H:%M:%S')] $*"
+}
+err() {
+  echo "[ERROR $(date '+%Y-%m-%d %H:%M:%S')] $*" >&2
+}
+die() {
+  err "$*"
+  exit 1
+}
+
+usage(){
+  cat <<EOF
+Usage: $prog [version] [options]
+
+Options:
+  -n, --dry-run               Show what would be done and exit
+  -h, --help                  Show this help
+
+Examples:
+  $prog                # interactive (suggests latest tag)
+  $prog 1.0.18         # provide explicit version
+  $prog 1.0.18 -M 1.20.1
+EOF
+}
+
+read_properties(){
+  local path="$1"
+  declare -A props
+  if [ ! -f "$path" ]; then
+    echo ""
+    return
+  fi
+  while IFS='=' read -r key val; do
+    key=${key%%"#"*}
+    key=$(echo "$key" | awk '{gsub(/^[ \t]+|[ \t]+$/,"",$0); print $0}')
+    val=$(echo "${val:-}" | awk '{gsub(/^[ \t]+|[ \t]+$/,"",$0); print $0}')
+    if [ -n "$key" ]; then
+      props["$key"]="$val"
+    fi
+  done < "$path"
+  # print as key=value lines
+  for k in "${!props[@]}"; do
+    printf '%s=%s\n' "$k" "${props[$k]}"
+  done
+}
+
+suggest_version_from_git(){
+  if ! command -v git >/dev/null 2>&1; then
+    return
+  fi
+  local tag
+  tag=$(git describe --tags --abbrev=0 2>/dev/null || true)
+  if [ -z "$tag" ]; then
+    return
+  fi
+  tag=$(echo "$tag" | tr -d '\r' | sed -E 's/^vdraft-//; s/^v//')
+  printf '%s' "$tag"
+}
+
+# parse args
+DRYRUN=0
+POSITIONAL=()
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    -n|--dry-run|--dryrun) DRYRUN=1; shift ;;
+    -h|--help) usage; exit 0 ;;
+    --) shift; break ;;
+    -* ) err "Unknown option: $1"; usage; exit 2 ;;
+    * ) POSITIONAL+=("$1"); shift ;;
+  esac
+done
+set -- "${POSITIONAL[@]:-}"
+
+VERSION="${1:-}"
+
+repo_root=$(pwd)
+props_raw=$(read_properties "$repo_root/versioning.properties" || true)
+base=""
+minecraft_version=""
+if [ -n "$props_raw" ]; then
+  while IFS='=' read -r k v; do
+    case "$k" in
+      base) base="$v" ;;
+      minecraft-version) minecraft_version="$v" ;;
+    esac
+  done <<<"$props_raw"
+fi
+
+[ -z "$base" ] && die "Missing 'base' in versioning.properties"
+[ -z "$minecraft_version" ] && die "Missing 'minecraft-version' in versioning.properties"
+
+if [ -z "$VERSION" ]; then
+  suggest=$(suggest_version_from_git || true)
+  if [ -n "$suggest" ]; then
+    info "Suggested version: $suggest"
+  fi
+  # read from user
+  printf 'Version (e.g. 1.2.3) [default: %s]: ' "$suggest"
+  read -r userv || true
+  if [ -z "$userv" ]; then
+    VERSION="$suggest"
+  else
+    VERSION="$userv"
+  fi
+  if [ -z "$VERSION" ]; then
+    die "No version supplied. Exiting."
+  fi
+fi
+
+# strip leading v/draft- if present
+VERSION=$(echo "$VERSION" | sed -E 's/^vdraft-//; s/^v//')
+
+zipname="${base}-${VERSION}.zip"
+releases_dir="$repo_root/releases"
+mkdir -p "$releases_dir"
+zippath="$releases_dir/$zipname"
+
+if [ -f "$zippath" ]; then
+  info "Zip $zippath already exists — overwriting"
+  rm -f "$zippath" || die "Unable to remove existing $zippath"
+fi
+
+staging="$repo_root/pack_build"
+# shellcheck disable=SC2317
+# cleanup() is invoked indirectly by the EXIT trap; ShellCheck reports
+# SC2317 (unreachable) here as a false positive. Disable the check for this block.
+cleanup(){
+  if [ -d "$staging" ]; then
+    rm -rf "$staging"
+  fi
+}
+trap cleanup EXIT
+
+info "Creating staging area..."
+rm -rf "$staging"
+mkdir -p "$staging"
+
+info "Copying datapack files into staging..."
+cp -a "$repo_root/data-pack-files/." "$staging/"
+
+for f in changelog.md LICENSE README.md; do
+  src="$repo_root/$f"
+  if [ -e "$src" ]; then
+    cp -a "$src" "$staging/"
+  fi
+done
+
+if [ $DRYRUN -eq 1 ]; then
+  info "Dry run: would create $zippath (staging: $staging)"
+  exit 0
+fi
+
+# Require 'zip' and keep behavior simple
+if ! command -v zip >/dev/null 2>&1; then
+  die "'zip' command not found. Install it (Debian/Ubuntu: sudo apt install zip)"
+fi
+info "Using zip (native)"
+pushd "$staging" >/dev/null
+# -r recurse, -9 best compression, -q quiet
+if ! zip -r -9 -q "$zippath" ./*; then
+  die "zip failed to create archive"
+fi
+popd >/dev/null
+
+if [ ! -f "$zippath" ]; then
+  die "Failed to create $zippath"
+fi
+
+sizekib=$(awk "BEGIN {printf \"%.2f\", $(stat -c%s "$zippath")/1024}")
+info "Created $zippath (${sizekib} KB)"
+
+# cleanup done by trap
+info "Pau. Have a great day! 🏄 🌈 🌴 🌺 🦄"
+exit 0
