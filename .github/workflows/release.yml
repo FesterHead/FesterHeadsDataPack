@@ -64,7 +64,11 @@ jobs:
         id: zip
         run: |
           set -euo pipefail
-          filename="${{ steps.props.outputs.base }}-${{ steps.props.outputs.minecraft_version }}-${{ steps.tag.outputs.version }}.zip"
+          # Compose filename from properties and tag
+          filename_raw="${{ steps.props.outputs.base }}-${{ steps.props.outputs.minecraft_version }}-${{ steps.tag.outputs.version }}.zip"
+          # Sanitize to remove CR/LF and filesystem-forbidden characters
+          # and collapse whitespace to '-'
+          filename=$(printf '%s' "$filename_raw" | tr -d '\r\n' | sed -E 's/["\:\<\>\|\*\?\\\/]//g' | sed -E "s/[[:space:]]+/-/g")
           mkdir -p releases
           sudo apt-get update -y
           sudo apt-get install -y zip rsync
@@ -75,6 +79,7 @@ jobs:
           for f in changelog.md LICENSE README.md; do
             if [ -f "$f" ]; then cp "$f" "$staging/" || true; fi
           done
+          # Create the zip using the sanitized filename
           (cd "$staging" && zip -r "../releases/$filename" .)
           rm -rf "$staging"
           echo "zip_path=releases/$filename" >> $GITHUB_OUTPUT

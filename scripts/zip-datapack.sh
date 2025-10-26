@@ -98,6 +98,16 @@ fi
 [ -z "$base" ] && die "Missing 'base' in versioning.properties"
 [ -z "$minecraft_version" ] && die "Missing 'minecraft-version' in versioning.properties"
 
+# Sanitize values read from files or git (remove CR/LF and characters
+# that are not safe in filenames/artifact names on Windows/NTFS).
+sanitize_name() {
+  # remove CR/LF, remove characters: " : < > | * ? \\ / and condense whitespace to '-'
+  printf '%s' "$1" | tr -d '\r\n' | sed -E 's/["\:\<\>\|\*\?\\\/]//g' | sed -E 's/[[:space:]]+/-/g'
+}
+
+base=$(sanitize_name "$base")
+minecraft_version=$(sanitize_name "$minecraft_version")
+
 if [ -z "$VERSION" ]; then
   suggest=$(suggest_version_from_git || true)
   if [ -n "$suggest" ]; then
@@ -119,11 +129,32 @@ fi
 # strip leading v/draft- if present
 VERSION=$(echo "$VERSION" | sed -E 's/^vdraft-//; s/^v//')
 
-zipname="${base}-${VERSION}.zip"
+# sanitize version string
+VERSION=$(sanitize_name "$VERSION")
+
+if [ -n "$minecraft_version" ]; then
+  zipname="${base}-${minecraft_version}-${VERSION}.zip"
+else
+  zipname="${base}-${VERSION}.zip"
+fi
 releases_dir="$repo_root/releases"
 mkdir -p "$releases_dir"
 zippath="$releases_dir/$zipname"
 
+# Clean up any existing release files that contain invalid characters
+# (for example CR/LF) which can break artifact upload on Windows/Actions.
+while IFS= read -r f; do
+  bn=$(basename "$f")
+  # detect carriage return in filename (common when CRLF slipped in)
+  case "$bn" in
+    *$'\r'*|*$'\n'*)
+      info "Removing existing invalid filename: $f"
+      rm -f "$f" || die "Unable to remove $f"
+      ;;
+  esac
+done < <(find "$releases_dir" -maxdepth 1 -type f || true)
+
+# If a sanitized target already exists, remove it so we create a fresh file.
 if [ -f "$zippath" ]; then
   info "Zip $zippath already exists — overwriting"
   rm -f "$zippath" || die "Unable to remove existing $zippath"
@@ -160,16 +191,21 @@ if [ $DRYRUN -eq 1 ]; then
 fi
 
 # Require 'zip' and keep behavior simple
-if ! command -v zip >/dev/null 2>&1; then
-  die "'zip' command not found. Install it (Debian/Ubuntu: sudo apt install zip)"
+if command -v zip >/dev/null 2>&1; then
+  info "Using zip (native)"
+  pushd "$staging" >/dev/null
+  # Create zip into a temporary file and then atomically move into releases
+  tmpzip=$(mktemp -p "$releases_dir" tmp-zip-XXXXXX.zip)
+  # ensure zip creates the archive (remove the empty temp file created by mktemp)
+  rm -f "$tmpzip"
+  if ! zip -r -9 -q "$tmpzip" ./*; then
+    rm -f "$tmpzip" || true
+    die "zip failed to create archive"
+  fi
+  popd >/dev/null
+  # move to the final name (atomic on POSIX filesystems)
+  mv -f "$tmpzip" "$zippath" || die "Failed to move archive to $zippath"
 fi
-info "Using zip (native)"
-pushd "$staging" >/dev/null
-# -r recurse, -9 best compression, -q quiet
-if ! zip -r -9 -q "$zippath" ./*; then
-  die "zip failed to create archive"
-fi
-popd >/dev/null
 
 if [ ! -f "$zippath" ]; then
   die "Failed to create $zippath"
