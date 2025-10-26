@@ -20,7 +20,6 @@ jobs:
         uses: github/super-linter@v5
         env:
           DEFAULT_BRANCH: main
-          # Enable specific validators explicitly (preferred for super-linter v5)
           VALIDATE_JSON: true
           VALIDATE_YAML: true
           VALIDATE_MARKDOWN: true
