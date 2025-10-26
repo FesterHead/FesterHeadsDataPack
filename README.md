@@ -60,6 +60,39 @@ If you want to remove specific items or features from the datapack (for example 
 
 After editing, re-zip the datapack and install into `world/datapacks/`, then reload the world or restart the server.
 
+## Developer tooling — pre-commit hooks
+
+This repository includes a recommended `pre-commit` configuration to keep JSON, YAML, Markdown and shell files consistent and linted before commits.
+
+Files added:
+
+- `.pre-commit-config.yaml` — config for pre-commit hooks (prettier for JSON/MD, json/yaml checks, shellcheck, etc.).
+
+Install and use locally (recommended):
+
+```powershell
+# Install pre-commit (Python is required)
+pip install --user pre-commit
+
+# Install git hook scripts for this repository (run once)
+pre-commit install
+
+# Run all configured hooks against all files (useful to see current findings)
+pre-commit run --all-files
+```
+
+If you prefer, you can run a single hook, for example:
+
+```powershell
+# Run prettier (JSON/MD) only
+pre-commit run prettier --all-files
+
+# Run shellcheck only
+pre-commit run shellcheck --all-files
+```
+
+If `pre-commit run --all-files` reports issues, fix them locally and re-run. We can tune or disable noisy hooks if needed.
+
 ## Release workflow
 
 - Tag-based: pushing `vX.Y.Z` creates a published release and uploads the ZIP.
