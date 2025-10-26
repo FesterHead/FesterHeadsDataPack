@@ -21,14 +21,16 @@ jobs:
         id: props
         run: |
           set -euo pipefail
-          base=$(grep -E '^base=' versioning.properties | cut -d'=' -f2- || true)
-          mc=$(grep -E '^minecraft-version=' versioning.properties | cut -d'=' -f2- || true)
+          base=$(grep -E '^base=' versioning.properties | \
+            cut -d'=' -f2- || true)
+          mc=$(grep -E '^minecraft-version=' versioning.properties | \
+            cut -d'=' -f2- || true)
           if [ -z "$base" ]; then
             echo "base not found in versioning.properties" >&2
             exit 1
           fi
           if [ -z "$mc" ]; then
-            echo "minecraft-version not found in versioning.properties" >&2
+            echo "minecraft-version missing in versioning.properties" >&2
             exit 1
           fi
           echo "base=$base" >> "$GITHUB_OUTPUT"
@@ -63,16 +65,14 @@ jobs:
         id: zip
         run: |
           set -euo pipefail
-          # Compose filename from properties and tag using short variables to keep
-          # each line under the linter's line-length limits.
+          # Compose filename from properties and tag using short vars
           base="${{ steps.props.outputs.base }}"
           mc="${{ steps.props.outputs.minecraft_version }}"
           ver="${{ steps.tag.outputs.version }}"
           filename_raw="${base}-${mc}-${ver}.zip"
-          # Sanitize to remove CR/LF and filesystem-forbidden characters and
-          # collapse whitespace to '-'
+          # Sanitize filename and collapse whitespace to '-'
           clean=$(printf '%s' "$filename_raw" | tr -d '\r\n')
-          clean=$(printf '%s' "$clean" | sed -E "s/[\"\:\<\>\|\*\?\\\/]//g")
+          clean=$(printf '%s' "$clean" | sed -E 's/[":<>|*?\\\/]//g')
           filename=$(printf '%s' "$clean" | sed -E 's/[[:space:]]+/-/g')
           mkdir -p releases
           sudo apt-get update -y
@@ -103,11 +103,13 @@ jobs:
         run: |
           set -euo pipefail
           version="${{ steps.tag.outputs.version }}"
-          # Use sed to extract the section between '## [version]' and the next
-          # '## [' to avoid awk quoting issues.
+          # Extract changelog section for this version
           if [ -f changelog.md ]; then
-            body=$(sed -n "/^## \[$version\]/,/^## \[/{/^## \[$version\]/d; /^## \[/q; p}" \
-              changelog.md || true)
+            body=$(awk -v ver="$version" '
+              $0 == "## [" ver "]" { p=1; next }
+              /^## \[/ { if (p) exit }
+              p { print }
+            ' changelog.md || true)
           else
             body=""
           fi
@@ -136,7 +138,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
-          # Ensure gh is available (it usually is on ubuntu-latest); fall back to apt if not
+          # Ensure gh is available; if not, install via apt
           if ! command -v gh > /dev/null 2>&1; then
             sudo apt-get update -y
             sudo apt-get install -y gh
@@ -144,4 +146,6 @@ jobs:
           tag_name="${{ github.ref_name }}"
           zip_path="${{ steps.zip.outputs.zip_path }}"
           repo="${{ github.repository }}"
-          gh release upload "$tag_name" "$zip_path" --repo "$repo" --clobber
+          gh release upload "$tag_name" "$zip_path" \
+            --repo "$repo" \
+            --clobber
