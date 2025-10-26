@@ -102,7 +102,7 @@ fi
 # that are not safe in filenames/artifact names on Windows/NTFS).
 sanitize_name() {
   # remove CR/LF, remove characters: " : < > | * ? \\ / and condense whitespace to '-'
-  printf '%s' "$1" | tr -d '\r\n' | sed -E 's/["\:\<\>\|\*\?\\\/]//g' | sed -E 's/[[:space:]]+/-/g'
+  printf '%s' "$1" | tr -d '\r\n' | sed -E 's/[":<>|*?\\\/]//g' | sed -E 's/[[:space:]]+/-/g'
 }
 
 base=$(sanitize_name "$base")
