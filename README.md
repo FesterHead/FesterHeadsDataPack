@@ -66,7 +66,7 @@ If you want to remove specific items or features from the datapack (for example 
 
 After editing, re-zip the datapack and install into `world/datapacks/`, then reload the world or restart the server.
 
-You can alo submit a pull request for the release.yaml to build additional artifacts based on the `data-pack-files/data` folders.
+You can also submit a pull request for the release.yaml to build additional artifacts based on the `data-pack-files/data` folders.
 
 ## Developer tooling — pre-commit hooks
 
