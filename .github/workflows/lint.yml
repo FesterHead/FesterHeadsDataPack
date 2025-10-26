@@ -6,7 +6,7 @@ on:
   pull_request:
     branches: [main]
   # Allow manual runs from the Actions UI when needed.
-  workflow_dispatch: { }
+  workflow_dispatch: {}
 
 jobs:
   super-linter:
@@ -20,8 +20,10 @@ jobs:
         uses: github/super-linter@v5
         env:
           DEFAULT_BRANCH: main
-          # Use an explicit include list to avoid mixed include/exclude
-          # configuration issues that can happen with broad excludes.
-          VALIDATE: "json,yaml,markdown,shell"
+          # Enable specific validators explicitly (preferred for super-linter v5)
+          VALIDATE_JSON: true
+          VALIDATE_YAML: true
+          VALIDATE_MARKDOWN: true
+          VALIDATE_SHELL: true
           VALIDATE_ALL_CODEBASE: false
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
