@@ -1,0 +1,131 @@
+name: Create datapack release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Read base and minecraft-version from versioning.properties
+        id: props
+        run: |
+          set -euo pipefail
+          base=$(grep -E '^base=' versioning.properties | cut -d'=' -f2- || true)
+          mc=$(grep -E '^minecraft-version=' versioning.properties | cut -d'=' -f2- || true)
+          if [ -z "$base" ]; then
+            echo "base not found in versioning.properties" >&2
+            exit 1
+          fi
+          if [ -z "$mc" ]; then
+            echo "minecraft-version not found in versioning.properties" >&2
+            exit 1
+          fi
+          echo "base=$base" >> $GITHUB_OUTPUT
+          echo "minecraft_version=$mc" >> $GITHUB_OUTPUT
+
+      - name: Derive version from tag
+        id: tag
+        run: |
+          set -euo pipefail
+          # github.ref looks like refs/tags/v1.0.17
+          ref="${GITHUB_REF:-}"
+          if [ -z "$ref" ]; then
+            echo "GITHUB_REF not set" >&2
+            exit 1
+          fi
+          version="${ref#refs/tags/}"
+          # normalize: if tag is like 'vdraft-1.0.17' remove the 'vdraft-' prefix,
+          # otherwise if tag is like 'v1.0.17' remove leading 'v' or 'V'
+          lc_version="${version,,}"
+          if [[ "$lc_version" == vdraft-* ]]; then
+            # remove first 7 chars 'vdraft-'
+            version="${version:7}"
+          else
+            version="${version#v}"
+            version="${version#V}"
+          fi
+          if [ -z "$version" ]; then
+            echo "Failed to derive version from tag: $ref" >&2
+            exit 1
+          fi
+          echo "version=$version" >> $GITHUB_OUTPUT
+
+      - name: Create zip of datapack
+        id: zip
+        run: |
+          set -euo pipefail
+          filename="${{ steps.props.outputs.base }}-${{ steps.props.outputs.minecraft_version }}-${{ steps.tag.outputs.version }}.zip"
+          mkdir -p releases
+          sudo apt-get update -y
+          sudo apt-get install -y zip rsync
+          staging="pack_build"
+          rm -rf "$staging"
+          mkdir -p "$staging"
+          rsync -a --delete data-pack-files/ "$staging/"
+          for f in changelog.md LICENSE README.md; do
+            if [ -f "$f" ]; then cp "$f" "$staging/" || true; fi
+          done
+          (cd "$staging" && zip -r "../releases/$filename" .)
+          rm -rf "$staging"
+          echo "zip_path=releases/$filename" >> $GITHUB_OUTPUT
+          echo "zip_name=$filename" >> $GITHUB_OUTPUT
+
+      - name: Upload zip as artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ steps.zip.outputs.zip_name }}
+          path: ${{ steps.zip.outputs.zip_path }}
+
+      - name: Extract changelog entry for this version
+        id: changelog
+        run: |
+          set -euo pipefail
+          version="${{ steps.tag.outputs.version }}"
+          # Extract the changelog section for the matching version (between '## [version]' and the next '## [')
+          body=$(awk -v ver="$version" 'BEGIN{pat="^## \\[' ver "\\]"} $0 ~ pat {found=1; next} /^## \\[/{ if(found) exit } found{print}' changelog.md || true)
+          if [ -z "$body" ]; then
+            body="No changelog entry found for version $version"
+          fi
+          # expose multi-line body as output
+          echo "body<<EOF" >> $GITHUB_OUTPUT
+          printf '%s\n' "$body" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Create GitHub release
+        id: create_release
+        uses: actions/create-release@v1
+        with:
+          tag_name: ${{ github.ref_name }}
+          release_name: ${{ github.ref_name }}
+          body: ${{ steps.changelog.outputs.body }}
+          draft: ${{ startsWith(github.ref_name, 'vdraft-') }}
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload normal zip to release
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ steps.zip.outputs.zip_path }}
+          asset_name: ${{ steps.zip.outputs.zip_name }}
+          asset_content_type: application/zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload optional zip to release
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ steps.zip.outputs.zip_path_optional }}
+          asset_name: ${{ steps.zip.outputs.zip_name_optional }}
+          asset_content_type: application/zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
