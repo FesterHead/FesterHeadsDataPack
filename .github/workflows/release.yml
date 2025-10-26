@@ -1,5 +1,8 @@
 name: Create datapack release
 
+permissions:
+  contents: write
+
 on:
   push:
     tags:
