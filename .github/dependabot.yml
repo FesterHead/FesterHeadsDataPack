@@ -1,0 +1,11 @@
+# .github/dependabot.yml
+version: 2
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "/" # root - looks at .github/workflows/*.yml
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+    # Optionally add reviewers/labels/assignees here if you want auto-labeling
+    # labels:
+    #   - "dependencies"
