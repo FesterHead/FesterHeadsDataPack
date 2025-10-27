@@ -1,0 +1,153 @@
+---
+name: Create datapack release
+
+permissions:
+  contents: write
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Read base and minecraft-version from versioning.properties
+        id: props
+        run: |
+          set -euo pipefail
+          base=$(grep -E '^base=' versioning.properties | \
+            cut -d'=' -f2- || true)
+          mc=$(grep -E '^minecraft-version=' versioning.properties | \
+            cut -d'=' -f2- || true)
+          if [ -z "$base" ]; then
+            echo "base not found in versioning.properties" >&2
+            exit 1
+          fi
+          if [ -z "$mc" ]; then
+            echo "minecraft-version missing in versioning.properties" >&2
+            exit 1
+          fi
+          echo "base=$base" >> "$GITHUB_OUTPUT"
+          echo "minecraft_version=$mc" >> "$GITHUB_OUTPUT"
+
+      - name: Derive version from tag
+        id: tag
+        run: |
+          set -euo pipefail
+          # github.ref looks like refs/tags/v1.0.17
+          ref="${GITHUB_REF:-}"
+          if [ -z "$ref" ]; then
+            echo "GITHUB_REF not set" >&2
+            exit 1
+          fi
+          version="${ref#refs/tags/}"
+          # normalize: remove 'vdraft-' prefix or leading 'v'/'V'
+          lc_version="${version,,}"
+          if [[ "$lc_version" == vdraft-* ]]; then
+            version="${version:7}"
+          else
+            version="${version#v}"
+            version="${version#V}"
+          fi
+          if [ -z "$version" ]; then
+            echo "Failed to derive version from tag: $ref" >&2
+            exit 1
+          fi
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
+      - name: Create zip of datapack
+        id: zip
+        run: |
+          set -euo pipefail
+          # Compose filename from properties and tag using short vars
+          base="${{ steps.props.outputs.base }}"
+          mc="${{ steps.props.outputs.minecraft_version }}"
+          ver="${{ steps.tag.outputs.version }}"
+          filename_raw="${base}-${mc}-${ver}.zip"
+          # Sanitize filename and collapse whitespace to '-'
+          clean=$(printf '%s' "$filename_raw" | tr -d '\r\n')
+          clean=$(printf '%s' "$clean" | sed -E 's/[":<>|*?\\\/]//g')
+          filename=$(printf '%s' "$clean" | sed -E 's/[[:space:]]+/-/g')
+          mkdir -p releases
+          sudo apt-get update -y
+          sudo apt-get install -y zip rsync
+          staging="pack_build"
+          rm -rf "$staging"
+          mkdir -p "$staging"
+          rsync -a --delete data-pack-files/ "$staging/"
+          for f in changelog.md LICENSE README.md; do
+            if [ -f "$f" ]; then
+              cp "$f" "$staging/" || true
+            fi
+          done
+          # Create the zip using the sanitized filename
+          (cd "$staging" && zip -r "../releases/$filename" .)
+          rm -rf "$staging"
+          echo "zip_path=releases/$filename" >> "$GITHUB_OUTPUT"
+          echo "zip_name=$filename" >> "$GITHUB_OUTPUT"
+
+      - name: Upload zip as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.zip.outputs.zip_name }}
+          path: ${{ steps.zip.outputs.zip_path }}
+
+      - name: Extract changelog entry for this version
+        id: changelog
+        run: |
+          set -euo pipefail
+          version="${{ steps.tag.outputs.version }}"
+          # Extract changelog section for this version
+          if [ -f changelog.md ]; then
+            body=$(awk -v ver="$version" '
+              $0 == "## [" ver "]" { p=1; next }
+              /^## \[/ { if (p) exit }
+              p { print }
+            ' changelog.md || true)
+          else
+            body=""
+          fi
+          if [ -z "$body" ]; then
+            body="No changelog entry found for version $version"
+          fi
+          # expose multi-line body as output
+          {
+            echo "body<<EOF"
+            printf '%s\n' "$body"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Create GitHub release
+        id: create_release
+        uses: ncipollo/release-action@v1
+        with:
+          tag: ${{ github.ref_name }}
+          name: ${{ github.ref_name }}
+          body: ${{ steps.changelog.outputs.body }}
+          draft: ${{ startsWith(github.ref_name, 'vdraft-') }}
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload zip to release (gh CLI)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          # Ensure gh is available; if not, install via apt
+          if ! command -v gh > /dev/null 2>&1; then
+            sudo apt-get update -y
+            sudo apt-get install -y gh
+          fi
+          tag_name="${{ github.ref_name }}"
+          zip_path="${{ steps.zip.outputs.zip_path }}"
+          repo="${{ github.repository }}"
+          gh release upload "$tag_name" "$zip_path" \
+            --repo "$repo" \
+            --clobber

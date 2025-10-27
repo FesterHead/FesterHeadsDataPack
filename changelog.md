@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.0]
+
+- Added GitHub actions build draft and public releases based on tags.
+- Removed redundant version from versioning.properties, will get from tags or user input.
+- Replaced zip-datapack.bat with scripts/zip-datapack.sh for Linux/WSL support.
+- Restored allium recipe to use both dirt and seeds.
+- Added the no-tall-grass and no-short-grass world gen from my other datapack.
+- Added lint checks.
+- Improved README.
+- Switched to using WSL and therefore shell scripts.
+
 ## [1.0.17]
 
 - Removed spyglass.json, VS Code Copilot and Google Gemini are better helpers.
