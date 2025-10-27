@@ -93,7 +93,7 @@ jobs:
           echo "zip_name=$filename" >> "$GITHUB_OUTPUT"
 
       - name: Upload zip as artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: ${{ steps.zip.outputs.zip_name }}
           path: ${{ steps.zip.outputs.zip_path }}
